@@ -9,7 +9,7 @@ const initMessenger = require('./src/messenger.js');
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
-    terminal: false,
+    terminal: true,
 });
 
 const loggedIn = false;

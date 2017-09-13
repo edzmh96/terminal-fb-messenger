@@ -25,13 +25,16 @@ class MessengerManager {
             const { senderID, body, threadID } = event;
 
             if (threadID != this.currentChatId) return;
+            // const currInput = this.rl.line;
 
             if (this.getUserFullname(senderID)) {
                 _.printMessage(this.getUserFullname(senderID), body);
+                this.rl._refreshLine()
             } else {
                 this.getUserInfo(senderID).then(user => {
                     this.cacheUser(senderID, user);
                     _.printMessage(this.getUserFullname(senderID), body);
+                    this.rl._refreshLine()
                 }, err => {
                     console.log(err);
                 });

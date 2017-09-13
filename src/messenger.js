@@ -33,6 +33,17 @@ const Messenger = (m, rl) => {
                 m.replyMessage(message);
                 rl.prompt();
                 break;
+
+            case 'remoji':
+                const emoji = args[1];
+                const emojiSize = args.length > 2 ? args[2] : 'small';
+                m.replyMessage({
+                    emoji,
+                    emojiSize,
+                });
+                rl.prompt();
+                break;
+
             case 'logout':
                 console.log('Logging out...');
                 m.logout(process.exit(0))

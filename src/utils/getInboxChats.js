@@ -21,7 +21,6 @@ const getChatPreview = (api, thread) => {
 const getInboxChats = (api, number) => {
     return new Promise((resolve, reject) => {
         let chats = [];
-        console.log('getting chats');
         api.getThreadList(0, number, 'inbox', (err, threads) => {
             console.log('got thread list');
             if (err) {
