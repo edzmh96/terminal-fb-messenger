@@ -8,13 +8,12 @@ const getChatPreview = (api, thread) => {
                 return reject(err);
             }
 
-            let res = {
+            resolve({
                 users,
                 threadID,
                 snippet,
-                chatName: name,
-            };
-            resolve(res);
+                name,
+            });
         });
     });
 }

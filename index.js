@@ -18,14 +18,14 @@ let credentials;
 // TODO: repeat while not valid
 // if (fs.existsSync('credentials.json')) {
 const promptLogin = () => {
-    if (false) {
-        credentials = fs.readFileSync('credentials.json', 'utf8');
-        login(credentials, (err, api) => {
+    if (fs.existsSync('credentials.json')) {
+        const appState = JSON.parse(fs.readFileSync('credentials.json', 'utf8'));
+        login({ appState }, (err, api) => {
             if (err) {
                 console.log(err);
             } else {
                 fs.writeFileSync('credentials.json', JSON.stringify(api.getAppState()));
-                initMessenger(api);
+                initMessenger(api, rl);
             }
         });
     } else {

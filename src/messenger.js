@@ -19,12 +19,18 @@ const Messenger = (m, rl) => {
 
             case 'cd':
                 console.log(`cd called with ${args[1]}`);
-                m.listen();
-                rl.prompt();
+                if (args[1] == '..') {
+                    m.exitChat();
+                } else {
+                    m.getThreadHistory(args[1], 50);
+                }
+
                 break;
 
             case 'r':
-                console.log(`replying to ${args[1]}`);
+                args.shift();
+                const message = args.join(' ');
+                m.replyMessage(message);
                 rl.prompt();
                 break;
             case 'logout':

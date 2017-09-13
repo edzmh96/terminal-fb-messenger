@@ -9,28 +9,38 @@ class MessengerManager {
         this.chats = {};
         this.dirty = false;
         this.friends = {};
+        this.listening = false;
     }
 
     listen(callback) {
+        this.listening = true;
         this.api.setOptions({
             selfListen: true,
-            // logLevel: 'silent',
+            logLevel: 'silent',
         });
-        this.api.listen((err, event) => {
-
+        const stopListening = this.api.listen((err, event) => {
+            // weird hack, not sure why calling stopListening doesn't work outside of callback
+            if (!this.listening) return stopListening();
             if (err) return console.log(err);
-            let senderName;
-            if (this.friends[event.senderID]) {
-                console.log(`${senderName}: ${event.body}`);
+            const { senderID, body, threadID } = event;
+
+            if (threadID != this.currentChatId) return;
+
+            if (this.getUserFullname(senderID)) {
+                _.printMessage(this.getUserFullname(senderID), body);
             } else {
-                this.getUserInfo(event.senderID).then(user => {
-                    this.cacheUser(event.senderID, user);
-                    console.log(`${getUserFullname(event.senderID)}: ${event.body}`);
+                this.getUserInfo(senderID).then(user => {
+                    this.cacheUser(senderID, user);
+                    _.printMessage(this.getUserFullname(senderID), body);
                 }, err => {
                     console.log(err);
                 });
             }
         });
+    }
+
+    replyMessage(message) {
+        this.api.sendMessage(message, this.currentChatId);
     }
 
     cacheUser(userId, user) {
@@ -93,33 +103,54 @@ class MessengerManager {
         });
     }
 
+    openChat(messages) {
+        messages.forEach(message => {
+            const { senderID, body } = message;
+            _.printMessage(this.getUserFullname(senderID), body);
+        });
+        this.listen();
+    }
+
+    exitChat() {
+        this.listening = false;
+        this.currentChatId = null;
+        this.getInboxHistory(10);
+    }
+
     getThreadHistory(threadID, amount) {
-        api.getThreadHistory(threadID, amount, undefined, (err, history) => {
+        this.currentChatId = threadID;
+        this.api.getThreadHistory(threadID, amount, undefined, (err, history) => {
             if (err) return console.log(err);
 
             // check if user info is loaded
             if (this.chats[threadID]) {
                 const usersToLoad = [];
                 const users = this.chats[threadID].users;
-                users.forEach(user => {
-                    if (!this.friends[user.id]) {
-                        this.toLoad.push(user.id);
+                Object.keys(users).forEach(userId => {
+                    if (!this.friends[userId]) {
+                        usersToLoad.push(userId);
                     }
                 });
 
                 // if there's a user that's not already loaded, load the user
                 if (usersToLoad.length > 0) {
+                    console.log('loading more users ');
                     this.getUserInfo(usersToLoad).then(users => {
                         Object.keys(users).forEach(userId => {
                             this.cacheUser(userId, users[userId]);
                         });
 
-
+                        // display messages
+                        this.openChat(history);
+                        this.rl.prompt();
                     }, err => {
                         console.log(err);
                     })
                 } else {
-
+                    console.log('displaying messages');
+                    // display messages
+                    this.openChat(history);
+                    this.rl.prompt();
                 }
 
             }

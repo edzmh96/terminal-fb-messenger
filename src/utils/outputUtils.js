@@ -3,7 +3,7 @@
 const _ = {};
 
 _.printMessage = (senderName, message) => {
-    console.log(`${senderName}: ${message}`);
+    console.log(`---------> ${senderName}: ${message}`);
 };
 
 _.printChatPreview = (chatName, fullnames, chatSnippet, threadID) => {
