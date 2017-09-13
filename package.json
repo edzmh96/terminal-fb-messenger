@@ -1,0 +1,33 @@
+{
+  "name": "terminal-fb-messenger",
+  "version": "1.0.0",
+  "description": "terminal client for fb messenger",
+  "main": "index.js",
+  "scripts": {
+    "run": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edzmh96/terminal-fb-messenger.git"
+  },
+  "keywords": [
+    "fb",
+    "chat"
+  ],
+  "author": "Edward Zhou",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/edzmh96/terminal-fb-messenger/issues"
+  },
+  "homepage": "https://github.com/edzmh96/terminal-fb-messenger#readme",
+  "dependencies": {
+    "eslint-config-airbnb": "^15.1.0",
+    "facebook-chat-api": "^1.4.0"
+  },
+  "devDependencies": {
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.3.0"
+  }
+}
